@@ -8,6 +8,8 @@ using UIKit;
 using Prism.DryIoc;
 using DryIoc;
 
+using AlbumEditor.Models;
+
 namespace AlbumEditor.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -37,7 +39,7 @@ namespace AlbumEditor.iOS
     {
         public void RegisterTypes(IContainer container)
         {
-
+            container.Register<IPhotoService, Models.PhotoService>();
         }
     }
 }

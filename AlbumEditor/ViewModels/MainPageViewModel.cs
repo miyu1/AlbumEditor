@@ -17,11 +17,14 @@ namespace AlbumEditor.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
-        public MainPageViewModel()
+        public MainPageViewModel(Models.IPhotoService photoService)
         {
             var assembly = this.GetType().GetTypeInfo().Assembly;
             var name = assembly.GetName();
-            Title = String.Format( "{0} Version {1}",name.Name, App.Version );
+
+            var count = photoService.AlbumCount;
+            Title = String.Format( "{0} Version {1} Count:{2}",
+                                  name.Name, App.Version, count );
 		}
 
         public void OnNavigatedFrom(NavigationParameters parameters)

@@ -11,6 +11,8 @@ using Android.OS;
 using Prism.DryIoc;
 using DryIoc;
 
+using AlbumEditor.Models;
+
 namespace AlbumEditor.Droid
 {
     [Activity(Label = "AlbumEditor.Droid", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
@@ -30,7 +32,7 @@ namespace AlbumEditor.Droid
     {
         public void RegisterTypes(IContainer container)
         {
-
+            container.Register<IPhotoService, Models.PhotoService>();
         }
     }
 }
