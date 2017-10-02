@@ -4,6 +4,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace AlbumEditor.ViewModels
 {
@@ -18,8 +19,10 @@ namespace AlbumEditor.ViewModels
 
         public MainPageViewModel()
         {
-
-        }
+            var assembly = this.GetType().GetTypeInfo().Assembly;
+            var name = assembly.GetName();
+            Title = String.Format( "{0} Version {1}",name.Name, App.Version );
+		}
 
         public void OnNavigatedFrom(NavigationParameters parameters)
         {
@@ -28,8 +31,8 @@ namespace AlbumEditor.ViewModels
 
         public void OnNavigatedTo(NavigationParameters parameters)
         {
-            if (parameters.ContainsKey("title"))
-                Title = (string)parameters["title"] + " and Prism";
+            // if (parameters.ContainsKey("title"))
+            //     Title = (string)parameters["title"] + " and Prism";
         }
 
         public void OnNavigatingTo(NavigationParameters parameters)

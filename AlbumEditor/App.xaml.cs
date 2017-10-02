@@ -10,6 +10,8 @@ namespace AlbumEditor
 {
     public partial class App : PrismApplication
     {
+        public static String Version = "0.1"; 
+
         public App(){}
         public App(IPlatformInitializer initializer = null) : base(initializer) { }
 
@@ -17,7 +19,8 @@ namespace AlbumEditor
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync("MainPage?title=Hello%20from%20Xamarin.Forms");
+            // NavigationService.NavigateAsync("MainPage?title=Hello%20from%20Xamarin.Forms");
+            NavigationService.NavigateAsync("MainPage");
         }
 
         protected override void RegisterTypes()
