@@ -64,6 +64,7 @@ Global
 		$0.VersionControlPolicy = $1
 		$1.CommitMessageStyle = $2
 		$2.IncludeDirectoryPaths = True
+		$2.LineAlign = 0
 		$0.DotNetNamingPolicy = $3
 		$3.DirectoryNamespaceAssociation = PrefixedHierarchical
 		$0.TextStylePolicy = $4
