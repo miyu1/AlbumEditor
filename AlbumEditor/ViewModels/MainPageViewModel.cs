@@ -1,13 +1,20 @@
-﻿using Prism.Commands;
+﻿using System;
+using System.Windows.Input; // ICommand
+// using System.Collections.Generic;
+// using System.Linq;
+using System.Reflection;
+using System.Collections.ObjectModel;
+
+using Xamarin.Forms;
+
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace AlbumEditor.ViewModels
 {
+    using Models;
+
     public class MainPageViewModel : BindableBase, INavigationAware
     {
         private string _title;
@@ -24,10 +31,14 @@ namespace AlbumEditor.ViewModels
             set { SetProperty(ref _photoInfo, value); }
         }
 
+		// public ObservableCollection<PhotoViewModel> PhotoList { get; } = new ObservableCollection<PhotoViewModel>();
+		public ObservableCollection<IPhoto> PhotoList { get; } = new ObservableCollection<IPhoto>();
 
-        private Models.IPhotoService photoService;
+		private IPhotoService photoService;
 
-        public MainPageViewModel(Models.IPhotoService photoService)
+        public ICommand RefreshCommand { get; }
+                                          
+        public MainPageViewModel(IPhotoService photoService)
         {
             this.photoService = photoService;
             PhotoInfo = "IsServiceReady:" + photoService.IsServiceReady.ToString();
@@ -35,6 +46,7 @@ namespace AlbumEditor.ViewModels
                 PhotoInfo = "IsAuthorized:" + photoService.IsAuthorized.ToString();
                 if(photoService.IsAuthorized)
                     PhotoInfo = String.Format("AlbumCount:{0}", photoService.AlbumCount);
+                    ResetPhotoInfo();
 			} else {
                 photoService.ServiceReady += (sender, e) =>
                 {
@@ -45,9 +57,14 @@ namespace AlbumEditor.ViewModels
                     if(photoService.IsAuthorized){
                         PhotoInfo = String.Format("AlbumCount:{0}", 
                                                   photoService.AlbumCount);
+                        ResetPhotoInfo();
                     }
                 };
             }
+
+            RefreshCommand = new DelegateCommand( () => {
+                ResetPhotoInfo();
+            } );
 		}
 
         public void OnNavigatedFrom(NavigationParameters parameters)
@@ -72,6 +89,32 @@ namespace AlbumEditor.ViewModels
         {
 
         }
+
+        protected void ResetPhotoInfo()
+        {
+            PhotoList.Clear();
+            foreach( var p in photoService.PhotoList ){
+				// PhotoList.Add(new PhotoViewModel(p));
+				PhotoList.Add(p);
+			}
+        }
+	}
+
+    public class PhotoViewModel : BindableBase {
+
+        protected readonly IPhoto photoModel;
+
+        public PhotoViewModel(Models.IPhoto photoModel){
+            this.photoModel = photoModel;
+        }
+
+        /*
+        public ImageSource Thumbnail => 
+            ImageSource.FromStream( () => photoModel.Thumbnail );
+        */
+
+        public String Name => photoModel.Name;
+
     }
 }
 

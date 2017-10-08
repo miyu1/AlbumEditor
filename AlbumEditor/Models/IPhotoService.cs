@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace AlbumEditor.Models
 {
     public interface IPhotoService
@@ -14,5 +16,7 @@ namespace AlbumEditor.Models
         bool IsAuthorized{ get; }
 
 		long AlbumCount { get; }
+
+        List<IPhoto> PhotoList { get; }
 	}
 }

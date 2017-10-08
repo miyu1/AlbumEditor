@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Foundation;
-using UIKit;
 using Photos;
 
 using AlbumEditor.Models;
@@ -11,7 +11,7 @@ namespace AlbumEditor.iOS.Models
     public class PhotoService : IPhotoService
     {
         // Invokes event when this service is ready(initialized)
-        public event EventHandler ServiceReady; 
+        public event EventHandler ServiceReady;
 
         private PHAuthorizationStatus authorizationStatus;
         // private PHFetchResult col;
@@ -21,37 +21,53 @@ namespace AlbumEditor.iOS.Models
             IsServiceReady = false;
 
             authorizationStatus = PHPhotoLibrary.AuthorizationStatus;
-            if( authorizationStatus == PHAuthorizationStatus.NotDetermined)
-                PHPhotoLibrary.RequestAuthorization( 
-                    stat => {
+            if (authorizationStatus == PHAuthorizationStatus.NotDetermined)
+                PHPhotoLibrary.RequestAuthorization(
+                    stat =>
+                    {
                         authorizationStatus = stat;
                         IsServiceReady = true;
                     }
                 );
-            else                        
+            else
                 IsServiceReady = true;
         }
 
         private bool _isServiceReady = false;
-        public bool IsServiceReady{ 
-            get{ return _isServiceReady; }
+        public bool IsServiceReady
+        {
+            get { return _isServiceReady; }
             private set
             {
-                bool invoke = false;
-                if( _isServiceReady == false && value == true )
-                    invoke = true;
-                    
-                _isServiceReady = value;
+                if (_isServiceReady == false && value == true)
+					ServiceReady?.Invoke(this, null);
 
-                if( invoke )
-                    ServiceReady?.Invoke(this, null);
+                _isServiceReady = value;
             }
         }
 
-        public bool IsAuthorized{
-            get{ 
-                return(authorizationStatus==PHAuthorizationStatus.Authorized); 
-            } 
+        public bool IsAuthorized
+        {
+            get
+            {
+                return (authorizationStatus == PHAuthorizationStatus.Authorized);
+            }
+        }
+
+        public List<IPhoto> PhotoList
+        {
+            get {
+                var fetchReslt = PHAsset.FetchAssets(null);
+                var ret = new List<IPhoto>();
+
+                foreach ( PHAsset p in fetchReslt ){
+                    var photo = new Photo(p);
+
+                    ret.Add(photo);
+                }
+
+                return ret;
+            }            
         }
 
 
@@ -60,10 +76,17 @@ namespace AlbumEditor.iOS.Models
             {
                 if( !IsAuthorized ) return 0;
 
-                var col = PHCollection.FetchTopLevelUserCollections(null);
-                // var col2 = PHCollection.FetchTopLevelUserCollections(null);
-                // int ret = (int)col2.Count;
-                // return ret;
+                var option = new PHFetchOptions();
+                option.IncludeAssetSourceTypes = PHAssetSourceType.UserLibrary;
+
+                // list of album and folder
+                var col = PHCollection.FetchTopLevelUserCollections(option);
+                // list of shared album
+                col = PHAssetCollection.FetchAssetCollections( PHAssetCollectionType.Album,
+                                                               PHAssetCollectionSubtype.AlbumCloudShared,
+                                                               null );
+                // list of photos 
+                col = PHAsset.FetchAssets(null);
                 return col.Count;
             }
         }

@@ -5,11 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>AlbumEditor</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.companyname.AlbumEditor</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>com.test.AlbumEditor</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
@@ -44,5 +40,9 @@
 	<string>AlbumEditor</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To edit album information </string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1</string>
+	<key>CFBundleVersion</key>
+	<string>0.1</string>
 </dict>
 </plist>

@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AlbumEditor.Views.MainPage" Title="MainPage">
-	<StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+	<StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="30">
 		<Label Text="{Binding Title}" />
         <Label Text="{Binding PhotoInfo}" />
-	</StackLayout>
+        <ListView x:Name="PhotoListView" ItemsSource="{Binding PhotoList}" VerticalOptions="Fill">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                            <Image Source="{Binding Thumbnail}" VerticalOptions="FillAndExpand" />
+                            <Label Text="{Binding Name}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Footer>
+                <Label Text="{Binding PhotoList.Count, StringFormat='{0} items'}" HorizontalOptions="End" />
+            </ListView.Footer>
+            <!-- ListView.HeaderTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal" 
+                                 Padding="10,5,5,10"
+                                 BackgroundColor="Yellow">
+                        <Label Text="~~"/>
+                        <Label Text="{Binding}"/>
+                        <Label Text="~~"/>
+                    </StackLayout>
+                </DataTemplate>
+            </ListView.HeaderTemplate -->
+        </ListView>
+        <Button Text="Refresh" Command="{Binding RefreshCommand}" />
+    </StackLayout>
 </ContentPage>
