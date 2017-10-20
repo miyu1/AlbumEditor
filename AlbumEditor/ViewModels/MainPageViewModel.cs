@@ -34,7 +34,7 @@ namespace AlbumEditor.ViewModels
 		// public ObservableCollection<PhotoViewModel> PhotoList { get; } = new ObservableCollection<PhotoViewModel>();
 		public ObservableCollection<IPhoto> PhotoList { get; } = new ObservableCollection<IPhoto>();
 
-		private IPhotoService photoService;
+		public IPhotoService photoService;
 
         public ICommand RefreshCommand { get; }
                                           
@@ -92,6 +92,7 @@ namespace AlbumEditor.ViewModels
 
         protected void ResetPhotoInfo()
         {
+            PhotoInfo = DateTime.Now.ToString();
             PhotoList.Clear();
             foreach( var p in photoService.PhotoList ){
 				// PhotoList.Add(new PhotoViewModel(p));

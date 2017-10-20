@@ -14,23 +14,36 @@ namespace AlbumEditor.iOS.Models
         public event EventHandler ServiceReady;
 
         private PHAuthorizationStatus authorizationStatus;
-        // private PHFetchResult col;
 
+        private void ResetPhotoInfo(){
+            var fetchReslt = PHAsset.FetchAssets(null);
+
+            PhotoList.Clear();
+
+            foreach ( PHAsset p in fetchReslt ){
+                var photo = new Photo(p);
+                PhotoList.Add(photo);
+            }
+        }
+                                                         
         public PhotoService()
         {
             IsServiceReady = false;
 
             authorizationStatus = PHPhotoLibrary.AuthorizationStatus;
-            if (authorizationStatus == PHAuthorizationStatus.NotDetermined)
+            if(authorizationStatus == PHAuthorizationStatus.NotDetermined){
                 PHPhotoLibrary.RequestAuthorization(
                     stat =>
                     {
                         authorizationStatus = stat;
                         IsServiceReady = true;
+                        ResetPhotoInfo();
                     }
                 );
-            else
+            } else {
                 IsServiceReady = true;
+                ResetPhotoInfo();
+            }
         }
 
         private bool _isServiceReady = false;
@@ -54,7 +67,8 @@ namespace AlbumEditor.iOS.Models
             }
         }
 
-        public List<IPhoto> PhotoList
+        public List<IPhoto> PhotoList { get; } = new List<IPhoto>();
+        /*
         {
             get {
                 var fetchReslt = PHAsset.FetchAssets(null);
@@ -69,6 +83,7 @@ namespace AlbumEditor.iOS.Models
                 return ret;
             }            
         }
+        */
 
 
 		public long AlbumCount { 

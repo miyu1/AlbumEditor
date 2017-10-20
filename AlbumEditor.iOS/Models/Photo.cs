@@ -28,8 +28,6 @@ namespace AlbumEditor.iOS.Models
 			manager.RequestImageForAsset(asset, size, PHImageContentMode.AspectFill, 
                                          null, (result, info) => {
                 this.thumbnail = result;
-                Console.WriteLine("Name: {0}, Width:{1}, Height:{2}", 
-                                  Name, thumbnail.CGImage.Width, thumbnail.CGImage.Height );
 				// var data = thumbnail.CGImage.DataProvider.CopyData();
 				// Console.WriteLine("Data Length: {0}", data.Length);
 
@@ -37,24 +35,31 @@ namespace AlbumEditor.iOS.Models
 			} );
 		}
 
-		protected UIImage thumbnail;
-        /*
+        public String Name { 
+            get{
+                // var ret = asset.ValueForKey( new Foundation.NSString("filename") ); // file name
+                // var ret = asset.LocalIdentifier;
+                var ret = DateTime.Now;
+                return ret.ToString();
+            }
+        }
+
+		protected UIImage _thumbnail;
 		protected UIImage thumbnail
         {
             get { return _thumbnail; }
             set { 
-                _thumbnail = value; 
-                // RaisePropertyChanged("Thumbnail");
-				// RaisePropertyChanged("thumbnail");
-			}
-        }
-        */
+                SetProperty(ref _thumbnail, value);
 
-        public String Name { 
-            get{
-                var ret = asset.ValueForKey( new Foundation.NSString("filename") ); // file name
-                // var ret = asset.LocalIdentifier;
-                return ret?.ToString();
+				var ret = _thumbnail?.AsJPEG();
+				var ret2 = ret.AsStream();
+                Thumbnail = ImageSource.FromStream( () => {
+                    return ret2;   
+                } );
+
+				// RaisePropertyChanged("Thumbnail");
+				// RaisePropertyChanged("thumbnail");
+                // RaisePropertyChanged( "Stream" );
             }
         }
 
@@ -66,14 +71,24 @@ namespace AlbumEditor.iOS.Models
                 return ret2;
             }
         }*/
+
+        private ImageSource _Thumbnail;
 		public ImageSource Thumbnail 
         {
             get
             {
-				var ret = this.thumbnail?.AsJPEG();
-				var ret2 = ret.AsStream();
+                // Console.WriteLine( "PropertyName:{0}", StreamImageSource.StreamProperty.PropertyName );
+                return _Thumbnail;
+            }
 
-				return ImageSource.FromStream( () => ret2 );
+            private set
+            {
+                /*
+                Console.WriteLine( "Raise: Name: {0}, Width:{1}, Height:{2}",
+                  Name, _thumbnail.CGImage.Width, _thumbnail.CGImage.Height );
+                  */
+                SetProperty( ref _Thumbnail, value, "Stream" );
+                // SetProperty( ref _Thumbnail, value );
             }
         }
 	}
